@@ -1,5 +1,6 @@
 from typing import Optional
 
+from fastapi.responses import JSONResponse
 from pydantic import BaseModel, EmailStr, Field
 
 
@@ -41,17 +42,19 @@ class UpdateStudentModel(BaseModel):
         }
 
 
-def ResponseModel(data, message):
-    return {
+def ResponseModel(data: dict, code: int, message: str):
+    response = {
         "data": [data],
-        "code": 200,
+        "code": code,
         "message": message,
     }
+    return JSONResponse(content=response, status_code=response.get("code"))
 
 
 def ErrorResponseModel(error, code, message):
-    return {
+    response = {
         "error": error,
         "code": code,
         "message": message,
     }
+    return JSONResponse(content=response, status_code=response.get("code"))
